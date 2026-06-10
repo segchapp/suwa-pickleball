@@ -141,6 +141,27 @@
   .act-card:hover{border-color:var(--lime);transform:translateY(-6px)}
   .act-card .tag{font-family:var(--en);font-weight:700;color:var(--lime-bright);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
   .act-card h3{font-size:1.45rem;font-weight:900;margin:14px 0 16px;line-height:1.3}
+  /* schedule */
+  .schedule{margin-top:22px;background:rgba(255,255,255,.04);border:1px solid rgba(246,242,231,.12);border-radius:22px;padding:32px 30px}
+  .sched-head{display:flex;align-items:baseline;gap:14px;margin-bottom:8px;flex-wrap:wrap}
+  .sched-head .tag{font-family:var(--en);font-weight:700;color:var(--lime-bright);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
+  .sched-head h3{font-size:1.45rem;font-weight:900;color:var(--cream)}
+  .sched-list{list-style:none;display:flex;flex-direction:column;margin-top:10px}
+  .sched-row{display:grid;grid-template-columns:108px 138px 1fr;grid-template-areas:"date time place";gap:18px;align-items:center;padding:15px 0;border-top:1px solid rgba(246,242,231,.12)}
+  .sched-row:first-child{border-top:none}
+  .sched-date{grid-area:date;display:flex;align-items:baseline;gap:7px}
+  .sched-date .md{font-family:var(--en);font-weight:800;font-size:1.5rem;color:var(--lime-bright);line-height:1}
+  .sched-date .dow{font-size:.9rem;color:rgba(246,242,231,.72)}
+  .sched-time{grid-area:time;font-family:var(--en);font-weight:600;font-size:1.02rem;color:var(--cream)}
+  .sched-place{grid-area:place;font-size:1rem;color:rgba(246,242,231,.92)}
+  .sched-place .sub{color:rgba(246,242,231,.6);font-size:.88rem}
+  .sched-note{margin-top:18px;font-size:.86rem;color:rgba(246,242,231,.62)}
+  @media(max-width:600px){
+    .sched-row{grid-template-columns:74px 1fr;grid-template-areas:"date time" "date place";gap:2px 14px}
+    .sched-date{align-self:center}
+    .sched-date .md{font-size:1.3rem}
+    .schedule{padding:26px 20px}
+  }
   .act-list{list-style:none;display:flex;flex-direction:column;gap:11px}
   .act-list li{display:flex;gap:12px;font-size:.96rem;color:rgba(246,242,231,.86)}
   .act-list li b{color:var(--lime-bright);font-family:var(--en);font-weight:600;flex-shrink:0;min-width:54px}
@@ -362,6 +383,51 @@
           <li><b>参加費</b><span>1回 400円</span></li>
          </ul>
       </div>
+    </div>
+
+    <div class="schedule reveal">
+      <div class="sched-head">
+        <span class="tag en">Upcoming</span>
+        <h3>直近の練習日程</h3>
+      </div>
+      <ul class="sched-list">
+        <li class="sched-row">
+          <div class="sched-date"><span class="md">6/14</span><span class="dow">日</span></div>
+          <div class="sched-time">13:30〜16:30</div>
+          <div class="sched-place">諏訪市体育館 <span class="sub">ステージ側・3面</span></div>
+        </li>
+        <li class="sched-row">
+          <div class="sched-date"><span class="md">6/21</span><span class="dow">日</span></div>
+          <div class="sched-time">9:00〜12:00</div>
+          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span></div>
+        </li>
+        <li class="sched-row">
+          <div class="sched-date"><span class="md">6/28</span><span class="dow">日</span></div>
+          <div class="sched-time">9:00〜11:00</div>
+          <div class="sched-place">下諏訪町体育館 <span class="sub">手前側・3面</span></div>
+        </li>
+        <li class="sched-row">
+          <div class="sched-date"><span class="md">7/5</span><span class="dow">日</span></div>
+          <div class="sched-time">9:00〜12:00</div>
+          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span></div>
+        </li>
+        <li class="sched-row">
+          <div class="sched-date"><span class="md">7/12</span><span class="dow">日</span></div>
+          <div class="sched-time">16:30〜18:30</div>
+          <div class="sched-place">諏訪市体育館 <span class="sub">ステージ側・3面</span></div>
+        </li>
+        <li class="sched-row">
+          <div class="sched-date"><span class="md">7/20</span><span class="dow">月</span></div>
+          <div class="sched-time">9:00〜12:30</div>
+          <div class="sched-place">諏訪市体育館 <span class="sub">入り口側・3面</span></div>
+        </li>
+        <li class="sched-row">
+          <div class="sched-date"><span class="md">7/26</span><span class="dow">日</span></div>
+          <div class="sched-time">16:30〜18:30</div>
+          <div class="sched-place">諏訪市体育館 <span class="sub">ステージ側・3面</span></div>
+        </li>
+      </ul>
+      <p class="sched-note">日程・会場は変更になる場合があります。最新情報は<a href="https://lin.ee/n9YhKXx" target="_blank" rel="noopener" class="line-link">公式ライン</a>でご確認ください。</p>
     </div>
   </div>
 </section>
