@@ -56,6 +56,17 @@
   .burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px}
   .burger span{width:26px;height:2.5px;background:var(--ink);border-radius:2px;transition:.3s}
 
+  /* ---- アクセスカウンター ---- */
+  .visit-counter{
+    display:none;flex-direction:column;gap:2px;margin-left:18px;flex-shrink:0;
+    background:rgba(12,58,61,.05);border:1px solid rgba(12,58,61,.12);
+    border-radius:12px;padding:5px 11px;white-space:nowrap;line-height:1.25;
+  }
+  .visit-counter.on{display:flex}
+  .vc-item{display:flex;align-items:baseline;justify-content:space-between;gap:9px}
+  .vc-label{font-size:.63rem;font-weight:500;color:rgba(12,58,61,.55)}
+  .vc-num{font-family:var(--en);font-weight:700;font-size:.78rem;color:var(--teal);font-variant-numeric:tabular-nums}
+
   /* ---- hero ---- */
   .hero{
     position:relative;
@@ -272,6 +283,7 @@
     .nav-links a::after{display:none}
     .nav-cta{margin:8px 24px;text-align:center}
     .burger{display:flex}
+    .visit-counter{margin-left:auto;margin-right:8px}
     .about-grid{grid-template-columns:1fr;gap:40px}
     .hero-inner{grid-template-columns:1fr;gap:34px;text-align:center}
     .hero-text{max-width:none;order:2}
@@ -286,9 +298,26 @@
     .contact-grid{grid-template-columns:1fr;gap:40px}
     section{padding:72px 0}
   }
+  @media(max-width:560px){
+    .logo{font-size:.78rem;gap:8px}
+    .logo .logo-img{width:32px;height:32px}
+    .visit-counter{padding:4px 9px;margin-right:4px}
+    .vc-item{gap:7px}
+    .vc-label{font-size:.58rem}
+    .vc-num{font-size:.72rem}
+  }
   @media(max-width:520px){
     .feat{grid-template-columns:1fr}
     .steps{grid-template-columns:1fr}
+  }
+  @media(max-width:400px){
+    .logo{font-size:.72rem}
+    .logo .logo-img{width:30px;height:30px}
+    .visit-counter{padding:4px 8px;margin-right:0}
+    .vc-item{gap:6px}
+    .vc-label{font-size:.55rem}
+    .vc-num{font-size:.68rem}
+    .burger{padding:8px 4px}
   }
 </style>
 </head>
@@ -308,6 +337,10 @@
       <a href="#rules">基礎ルール</a>
       <a href="#faq">よくある質問</a>
       <a href="#contact" class="nav-cta">参加・お問い合わせ</a>
+    </div>
+    <div class="visit-counter" id="visitCounter" aria-label="アクセス数" title="アクセス数">
+      <span class="vc-item"><span class="vc-label">今日</span><span class="vc-num" id="vcToday">–</span></span>
+      <span class="vc-item"><span class="vc-label">昨日</span><span class="vc-num" id="vcYesterday">–</span></span>
     </div>
     <button class="burger" id="burger" aria-label="メニュー"><span></span><span></span><span></span></button>
   </nav>
@@ -337,7 +370,7 @@
     <div class="schedule reveal">
       <div class="sched-head">
         <span class="tag en">Upcoming</span>
-        <h3>直近の練習日程 <span class="sub" style="font-size:.62em;font-weight:400;opacity:.8">（8月28日更新）</span></h3>
+        <h3>直近の練習日程 <span class="sub" style="font-size:.62em;font-weight:400;opacity:.8">（8月22日更新）</span></h3>
       </div>
           <li class="sched-row m8">
           <div class="sched-date"><span class="md">8/30</span><span class="dow">日</span></div>
@@ -686,6 +719,49 @@
     entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
   },{threshold:.12});
   document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*0.08)+'s';io.observe(el);});
+
+  // アクセスカウンター（今日・昨日）
+  (function(){
+    const NS='suwa-pickleball-club';                 // カウンターの保存先の名前
+    const API='https://abacus.jasoncameron.dev';     // 無料・登録不要のカウンターAPI
+    const box=document.getElementById('visitCounter');
+    const elToday=document.getElementById('vcToday');
+    const elYest=document.getElementById('vcYesterday');
+    if(!box||!elToday||!elYest) return;
+
+    // 日付は日本時間（Asia/Tokyo）で判定する
+    const ymd=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d).replace(/-/g,'');
+    const now=new Date();
+    const today=ymd(now);
+    const yesterday=ymd(new Date(now.getTime()-86400000));
+
+    // mode: 'hit'=1増やして取得 / 'get'=増やさず取得
+    const ask=async(mode,key)=>{
+      const r=await fetch(API+'/'+mode+'/'+NS+'/d'+key,{cache:'no-store'});
+      if(r.status===404) return 0;                   // その日の記録がまだ無い
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const j=await r.json();
+      return typeof j.value==='number'?j.value:0;
+    };
+
+    (async()=>{
+      const flag='spc_visit_'+today;
+      let counted=false;
+      try{ counted=localStorage.getItem(flag)==='1'; }catch(e){}  // 同じブラウザからは1日1回だけカウント
+      try{
+        const [t,y]=await Promise.all([ask(counted?'get':'hit',today),ask('get',yesterday)]);
+        if(!counted){
+          try{
+            localStorage.setItem(flag,'1');
+            Object.keys(localStorage).forEach(k=>{if(k.indexOf('spc_visit_')===0&&k!==flag) localStorage.removeItem(k);});
+          }catch(e){}
+        }
+        elToday.textContent=t.toLocaleString('ja-JP');
+        elYest.textContent=y.toLocaleString('ja-JP');
+        box.classList.add('on');                     // 取得できたときだけ表示する
+      }catch(e){ /* 通信エラー時はカウンターを出さない */ }
+    })();
+  })();
 
   // スクロールでヘッダー隠す
   let last=0;const head=document.getElementById('head');
