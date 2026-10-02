@@ -183,6 +183,10 @@
 .sched-row.m11 .sched-place{color:#fff}
 .sched-row.m11 .sched-place .sub{color:#fff}
   .sched-note{margin-top:18px;font-size:.86rem;color:rgba(246,242,231,.62)}
+  .notice{border-color:rgba(255,107,74,.45);background:rgba(255,107,74,.07)}
+  .notice .sched-head .tag{color:var(--coral)}
+  .notice-body{margin-top:10px;font-size:.98rem;line-height:1.9;color:var(--cream)}
+  @media(max-width:600px){.notice{padding:24px 20px}.notice-body{font-size:.92rem}}
   /* ---- practice schedule at top (quick access for mobile) ---- */
   .sched-top{background:var(--ink);color:var(--cream);padding:64px 0 68px;position:relative;overflow:hidden;border-bottom:5px solid var(--lime)}
   .sched-top .schedule{margin-top:0}
@@ -372,7 +376,7 @@
         <span class="tag en">Upcoming</span>
         <h3>直近の練習日程 <span class="sub" style="font-size:.62em;font-weight:400;opacity:.8">（9月30日更新）</span></h3>
       </div>
-        
+      <ul class="sched-list">
         <li class="sched-row m10">
           <div class="sched-date"><span class="md">10/4</span><span class="dow">日</span></div>
           <div class="sched-time">9:00〜12:00</div>
@@ -415,6 +419,13 @@
 		 </li>
       </ul>
       <p class="sched-note">新規ご参加の方は、当日の混雑・準備の都合上、必ず事前(1週間前を目途)に<a href="https://lin.ee/n9YhKXx" target="_blank" rel="noopener" class="line-link">公式ライン</a>で参加のご連絡をお願いします。<br>日程・会場は変更になる場合があります。</p>
+    </div>
+    <div class="schedule notice reveal" id="notice">
+      <div class="sched-head">
+        <span class="tag en">Notice</span>
+        <h3>おしらせ</h3>
+      </div>
+      <p class="notice-body">EPSON本社体育館内の水回りが故障したため、10/2～11/4の間は体育館内の水道、トイレは使用不可となります。トイレご利用の際は、体育館を出て、警備所に向かう途中の左手の建物(資材棟)1Fのトイレをご利用下さい。</p>
     </div>
   </div>
 </section>
