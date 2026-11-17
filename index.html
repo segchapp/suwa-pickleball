@@ -190,6 +190,19 @@
 .sched-row.m1 .sched-time,.sched-row.m1 .dow{color:#ffd24a}
 .sched-row.m1 .sched-place{color:#fff}
 .sched-row.m1 .sched-place .sub{color:#fff}
+  .reserve-btn{display:block;margin-top:20px;text-align:center;background:var(--lime-bright);color:var(--ink);font-weight:900;font-size:1.08rem;text-decoration:none;padding:15px 20px;border-radius:40px;transition:transform .15s,background .2s}
+  .reserve-btn:hover{background:#fff;transform:translateY(-2px)}
+  .sched-place .stat{display:block;font-size:.84rem;color:rgba(246,242,231,.7)}
+  .sched-place .stat.stop{color:#ff6b6b;font-weight:700}
+  .sched-date{flex-wrap:wrap}
+  .sched-date .dnote{flex-basis:100%;font-size:.76rem;line-height:1.35;color:rgba(246,242,231,.72);margin-top:4px}
+  .sched-msg{padding:18px 0;color:rgba(246,242,231,.75);font-size:.95rem}
+.sched-row.m2 .md,.sched-row.m2 .sched-time,.sched-row.m2 .dow{color:#7ef0c4}
+.sched-row.m3 .md,.sched-row.m3 .sched-time,.sched-row.m3 .dow{color:#ffa3c8}
+.sched-row.m4 .md,.sched-row.m4 .sched-time,.sched-row.m4 .dow{color:#ff8fb1}
+.sched-row.m5 .md,.sched-row.m5 .sched-time,.sched-row.m5 .dow{color:#9be86a}
+.sched-row.m6 .md,.sched-row.m6 .sched-time,.sched-row.m6 .dow{color:#8fb8ff}
+.sched-row.m7 .md,.sched-row.m7 .sched-time,.sched-row.m7 .dow{color:#ffe066}
   .sched-note{margin-top:18px;font-size:.86rem;color:rgba(246,242,231,.62)}
   .notice{border-color:rgba(255,107,74,.45);background:rgba(255,107,74,.07)}
   .notice .sched-head .tag{color:var(--coral)}
@@ -348,6 +361,7 @@
       <a href="#join">入会の流れ</a>
       <a href="#rules">基礎ルール</a>
       <a href="#faq">よくある質問</a>
+      <a href="reserve.html">出欠登録</a>
       <a href="#contact" class="nav-cta">参加・お問い合わせ</a>
     </div>
     <div class="visit-counter" id="visitCounter" aria-label="アクセス数" title="アクセス数">
@@ -382,67 +396,23 @@
     <div class="schedule reveal">
       <div class="sched-head">
         <span class="tag en">Upcoming</span>
-        <h3>直近の練習日程 <span class="sub" style="font-size:.62em;font-weight:400;opacity:.8">（11月17日更新）</span></h3>
+        <h3>直近の練習日程 <span class="sub" style="font-size:.62em;font-weight:400;opacity:.8;white-space:nowrap">（人数は出欠ページで確認）</span></h3>
       </div>
-      <ul class="sched-list">
-       
-        
-        <li class="sched-row m11">
-          <div class="sched-date"><span class="md">11/23</span><span class="dow">月(勤労感謝の日)</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block;color:red;font-weight:bold">参加予定 30人(追加募集停止)</span></div>
-		 </li>
-        <li class="sched-row m12">
-          <div class="sched-date"><span class="md">12/6</span><span class="dow">日</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block;color:red;font-weight:bold">参加予定 24人(追加募集停止)</span></div>
-        </li>
-        <li class="sched-row m12">
-          <div class="sched-date"><span class="md">12/13</span><span class="dow">日</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block;color:red;font-weight:bold">参加予定 24人(追加募集停止)</span></div>
-        </li>
-        <li class="sched-row m12">
-          <div class="sched-date"><span class="md">12/20</span><span class="dow">日</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block;color:red;font-weight:bold">参加予定 24人(追加募集停止)</span></div>
-        </li>
-		   <li class="sched-row m12">
-          <div class="sched-date"><span class="md">12/27</span><span class="dow">日(年内最終練習日)</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block">参加予定 17人</span></div>
-        </li>
-        <li class="sched-row m1">
-          <div class="sched-date"><span class="md">1/10</span><span class="dow">日</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block">参加予定 9人</span></div>
-        </li>
-        <li class="sched-row m1">
-          <div class="sched-date"><span class="md">1/17</span><span class="dow">日</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block">参加予定 10人</span></div>
-        </li>
-        <li class="sched-row m1">
-          <div class="sched-date"><span class="md">1/24</span><span class="dow">日</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block">参加予定 10人</span></div>
-        </li>
-        <li class="sched-row m1">
-          <div class="sched-date"><span class="md">1/31</span><span class="dow">日</span></div>
-          <div class="sched-time">9:00〜12:00</div>
-          <div class="sched-place">EPSON本社体育館 <span class="sub">6面</span><span class="sub" style="display:block">参加予定 10人</span></div>
-        </li>
+      <ul class="sched-list" id="schedList">
+        <li class="sched-msg">練習日程を読み込んでいます…</li>
       </ul>
-      <p class="sched-note">新規ご参加の方は、必ず事前(1週間前を目途)に<a href="https://lin.ee/n9YhKXx" target="_blank" rel="noopener" class="line-link">公式ライン</a>で参加のご連絡をお願いします。<br><strong>【当日の流れ(一例)】</strong><br>入場(警備所で名簿にチェック＆身分証提示)→赤色の入場カードをもらい、入場の読み取り機にタッチする<br>→構内を通って地下通路を通り、シューズを履き替えて体育館に入り、ネット、キッチンラインの準備→<br>集金(400円／人)と同時に、各自の番号を確認する（この番号は毎回変わります）→アップ→基礎打ち→<br>試合(クラス分け無し)→試合(クラス分けあり)→終了、片付け→解散→退場(警備所で退場の読み取り機にタッチする<br>→入場カードを返却する)</p>
+      <a href="reserve.html" class="reserve-btn">出欠登録・キャンセル<span aria-hidden="true" style="white-space:nowrap">&nbsp;→</span></a>
+      <p class="sched-note">新規ご参加の方は、入場申請のために必要な情報のやり取りをさせて頂くため、上記の出欠登録および<a href="https://lin.ee/n9YhKXx" target="_blank" rel="noopener" class="line-link">公式ライン</a>でのご連絡をお願いします。過去に練習に参加されたことのある方は、出欠登録のみで結構です。</p>
     </div>
     <div class="schedule notice reveal" id="notice">
       <div class="sched-head">
         <span class="tag en">Notice</span>
         <h3>おしらせ</h3>
       </div>
-      <p class="notice-body">おかげさまで毎回、参加者が増加してきております。当クラブへも参加人数が多くなってきております。<br></p>
-		<p>参加人数が多くなるとコートに入れない時間が長くなり、体が冷え、ケガにもつながりますので<br><strong style="color:#f26b6b; font-weight:800; font-size:1.1em;">12月以降の練習日については、25人以上の参加申し込みは受け付けないものとし、練習内容を充実したものにしていきたいと思います。</strong><br></p>
-		<p>（参加申し込みは公式ラインでの先着順になります。一度に何日予約入れて頂いて構いません。空きはどんどん埋まっていきますので、お早めにお願いします。）<br></p>
+      <p class="notice-body">いつも諏訪ピックルボールクラブの練習にご参加いただき、ありがとうございます。<br>おかげさまで参加してくださる方が増えてきたため、<strong style="color:var(--lime-bright);font-weight:800">このたびホームページから練習の出欠登録ができるようになりました。</strong></p>
+      <p class="notice-body">上の「出欠登録・キャンセル」ボタンから、お名前とニックネームを入力して参加したい日を選ぶだけで登録できます。ご都合が悪くなったときのキャンセルも、同じページからご自身で行えます。何日分でもまとめてご登録いただけます。</p>
+      <p class="notice-body">なお、コートに入れない待ち時間が長くなると体が冷え、ケガにもつながるため、<strong style="color:#f26b6b;font-weight:800">各練習日の定員は24名（先着順）</strong>とさせていただいています。定員に達した日は自動で受付終了となりますので、お早めのご登録をおすすめします。</p>
+      <p class="notice-body">はじめての仕組みで分かりにくい点もあるかと思います。操作に迷ったときや気になることがあれば、<a href="https://lin.ee/n9YhKXx" target="_blank" rel="noopener" class="line-link">公式ライン</a>でお気軽にお声がけください。</p>
   </div>
 </div></section>
 
@@ -677,6 +647,36 @@
     burger.classList.toggle('open');
   });
   navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('show')));
+
+  // 練習日程（Googleスプレッドシート「日程」シートから自動表示）
+  (function(){
+    const GAS_URL='https://script.google.com/macros/s/AKfycbw6JoPTfEyRFA6YRWxyjNPLtsSzsdaZhMqMjUHLMSM2v2SvNZkrNle_aYPzP47G6XFE/exec';
+    const list=document.getElementById('schedList');
+    const DOW=['日','月','火','水','木','金','土'];
+    const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;};
+    const msg=(text)=>{list.textContent='';list.appendChild(el('li','sched-msg',text));};
+    fetch(GAS_URL,{cache:'no-store'}).then(r=>r.json()).then(j=>{
+      if(!j.ok)throw new Error(j.message);
+      const ss=j.sessions||[];
+      if(!ss.length){msg('現在、予定されている練習日はありません。決まり次第お知らせします。');return;}
+      list.textContent='';
+      ss.forEach(s=>{
+        const [y,m,d]=s.date.split('-').map(Number);
+        const li=el('li','sched-row m'+m);
+        const dt=el('div','sched-date');
+        dt.appendChild(el('span','md',m+'/'+d));
+        dt.appendChild(el('span','dow',DOW[new Date(y,m-1,d).getDay()]));
+        if(s.note)dt.appendChild(el('span','dnote',s.note));
+        li.appendChild(dt);
+        li.appendChild(el('div','sched-time',s.time));
+        const pl=el('div','sched-place',s.place);
+        const stop=s.full||!s.open;
+        if(stop)pl.appendChild(el('span','stat stop','追加募集停止'));
+        li.appendChild(pl);
+        list.appendChild(li);
+      });
+    }).catch(()=>{msg('練習日程を読み込めませんでした。時間をおいて再読み込みするか、下の出欠ページでご確認ください。');});
+  })();
 
   // FAQアコーディオン
   document.querySelectorAll('.qa button').forEach(btn=>{
