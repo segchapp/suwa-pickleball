@@ -695,47 +695,38 @@
   },{threshold:.12});
   document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(i%4*0.08)+'s';io.observe(el);});
 
-  // アクセスカウンター（今日・昨日）
+  // アクセスカウンター（今日・昨日）… 出欠と同じApps Script（スプレッドシート「アクセス」シート）で集計
   (function(){
-    const NS='suwa-pickleball-club';                 // カウンターの保存先の名前
-    const API='https://abacus.jasoncameron.dev';     // 無料・登録不要のカウンターAPI
+    const GAS_URL='https://script.google.com/macros/s/AKfycbw6JoPTfEyRFA6YRWxyjNPLtsSzsdaZhMqMjUHLMSM2v2SvNZkrNle_aYPzP47G6XFE/exec';
     const box=document.getElementById('visitCounter');
     const elToday=document.getElementById('vcToday');
     const elYest=document.getElementById('vcYesterday');
     if(!box||!elToday||!elYest) return;
 
-    // 日付は日本時間（Asia/Tokyo）で判定する
-    const ymd=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(d).replace(/-/g,'');
-    const now=new Date();
-    const today=ymd(now);
-    const yesterday=ymd(new Date(now.getTime()-86400000));
+    // 日付は日本時間で判定（同じブラウザからは1日1回だけカウント）
+    const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date()).replace(/-/g,'');
+    const flag='spc_visit_'+today;
+    let counted=false;
+    try{ counted=localStorage.getItem(flag)==='1'; }catch(e){}
 
-    // mode: 'hit'=1増やして取得 / 'get'=増やさず取得
-    const ask=async(mode,key)=>{
-      const r=await fetch(API+'/'+mode+'/'+NS+'/d'+key,{cache:'no-store'});
-      if(r.status===404) return 0;                   // その日の記録がまだ無い
-      if(!r.ok) throw new Error('HTTP '+r.status);
-      const j=await r.json();
-      return typeof j.value==='number'?j.value:0;
-    };
-
-    (async()=>{
-      const flag='spc_visit_'+today;
-      let counted=false;
-      try{ counted=localStorage.getItem(flag)==='1'; }catch(e){}  // 同じブラウザからは1日1回だけカウント
-      try{
-        const [t,y]=await Promise.all([ask(counted?'get':'hit',today),ask('get',yesterday)]);
+    const ac=new AbortController();
+    const timer=setTimeout(()=>ac.abort(),15000);   // 応答が無いときは15秒であきらめる
+    fetch(GAS_URL+'?action=visit&mode='+(counted?'get':'hit'),{cache:'no-store',signal:ac.signal})
+      .then(r=>r.json())
+      .then(j=>{
+        clearTimeout(timer);
+        if(!j.ok) throw new Error(j.message);
         if(!counted){
           try{
             localStorage.setItem(flag,'1');
             Object.keys(localStorage).forEach(k=>{if(k.indexOf('spc_visit_')===0&&k!==flag) localStorage.removeItem(k);});
           }catch(e){}
         }
-        elToday.textContent=t.toLocaleString('ja-JP');
-        elYest.textContent=y.toLocaleString('ja-JP');
+        elToday.textContent=Number(j.today||0).toLocaleString('ja-JP');
+        elYest.textContent=Number(j.yesterday||0).toLocaleString('ja-JP');
         box.classList.add('on');                     // 取得できたときだけ表示する
-      }catch(e){ /* 通信エラー時はカウンターを出さない */ }
-    })();
+      })
+      .catch(()=>{ clearTimeout(timer); /* 通信エラー時はカウンターを出さない */ });
   })();
 
   // スクロールでヘッダー隠す
