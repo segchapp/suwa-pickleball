@@ -70,6 +70,15 @@
   .chip{font-size:.84rem;padding:3px 11px;border-radius:40px;background:rgba(246,242,231,.12);color:#fff;overflow-wrap:anywhere}
   .chip.me{background:var(--lime-bright);color:var(--ink);font-weight:900}
   .chip.pre{background:none;border:1px dashed rgba(246,242,231,.4);color:rgba(246,242,231,.8)}
+  .waitbox{margin-top:12px;padding-top:10px;border-top:1px dashed rgba(246,242,231,.22)}
+  .waitbox .wl{font-size:.8rem;font-weight:700;color:#ffd24a;margin-bottom:6px}
+  .chip.wait{background:none;border:1px solid rgba(255,210,74,.55);color:#ffe9a8}
+  .chip.wait.me{background:#ffd24a;border-color:#ffd24a;color:#3a2a00;font-weight:900}
+  .chip.wait em{font-style:normal;font-family:var(--en);font-weight:800;margin-right:4px;opacity:.8}
+  .badge.wait{background:#ffd24a;color:#3a2a00}
+  .waitjoin{background:#ffd24a;color:#3a2a00;flex:1}
+  .you.w{color:#ffd24a}
+  .promo{margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--lime-bright);color:var(--ink);font-size:.86rem;font-weight:900}
   .act{margin-top:14px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
   .you{font-size:.84rem;font-weight:700;color:var(--lime-bright)}
   button{font:inherit;font-weight:900;font-size:.98rem;border:none;border-radius:40px;padding:12px 22px;cursor:pointer;min-height:46px}
@@ -94,7 +103,7 @@
 <main class="wrap">
   <span class="tag">Reserve</span>
   <h1>練習の出欠登録</h1>
-  <p class="lead">参加したい練習日の「参加する」を押してください。<strong>初めて参加される方は、先に<a href="https://lin.ee/n9YhKXx" target="_blank" rel="noopener">公式LINE</a>でご連絡をお願いします。</strong></p>
+  <p class="lead">参加したい練習日の「参加する」を押してください。満員の日は「キャンセル待ちに登録する」を押せます。<strong>初めて参加される方は、先に<a href="https://lin.ee/n9YhKXx" target="_blank" rel="noopener">公式LINE</a>でご連絡をお願いします。</strong></p>
 
   <section class="panel" id="me">
     <h2>あなたの情報</h2>
@@ -122,7 +131,8 @@
   <p class="state" id="state">日程を読み込んでいます…</p>
 
   <ul class="note">
-    <li>定員に達した日は「満員」と表示され、登録できなくなります(先着順)。</li>
+    <li>定員に達した日は「満員」と表示されます(先着順)。満員の日は「キャンセル待ち」に登録できます。</li>
+    <li>キャンセルが出ると、キャンセル待ちに先に登録した方から順に、自動で参加に繰り上がります(キャンセル待ちの登録と自動繰り上げは、練習日の前日22時まで)。それ以降に空きが出た場合は、このページで「参加する」を押した方が先着で参加できます。繰り上がりのお知らせは届かないため、練習日が近づいたらこのページでご確認ください。参加できなくなった場合は「キャンセルする」を押してください。</li>
     <li>参加者一覧にはニックネームのみ表示されます(本名は表示されません)。他の方と重ならない名前でご登録ください。</li>
     <li>暗証番号を忘れた場合や、ご不明な点は公式LINEでご連絡ください。</li>
   </ul>
@@ -177,10 +187,14 @@
     sessions.forEach(function(s){
       var p = s.date.split('-').map(Number);
       var mine = !!me && s.names.some(function(n){ return key(n) === me; });
+      var waits = s.waits || [];
+      var myWait = -1;
+      if (me && !mine) waits.forEach(function(n, i){ if (myWait < 0 && key(n) === me) myWait = i; });
+      var promoted = mine && (s.promoted || []).some(function(n){ return key(n) === me; });
       var left = s.capacity - s.count;
       var closed = s.full || !s.open;
 
-      var li = el('li', 'card' + (mine ? ' mine' : ''));
+      var li = el('li', 'card' + (mine || myWait >= 0 ? ' mine' : ''));
 
       var top = el('div', 'top');
       var dt = el('div');
@@ -189,8 +203,9 @@
       dt.appendChild(md);
       dt.appendChild(el('span', 'dow', DOW[new Date(p[0], p[1]-1, p[2]).getDay()] + (s.note ? '(' + s.note + ')' : '')));
       top.appendChild(dt);
-      top.appendChild(el('span', 'badge ' + (closed ? 'full' : left <= 4 ? 'few' : 'open'),
-        s.full ? '満員' : !s.open ? '受付終了' : left <= 4 ? 'あと' + left + '名' : '受付中'));
+      var canWait = s.full && s.open && s.waitOpen !== false;
+      top.appendChild(el('span', 'badge ' + (!s.open ? 'full' : canWait ? 'wait' : s.full ? 'full' : left <= 4 ? 'few' : 'open'),
+        !s.open ? '受付終了' : canWait ? '満員・キャンセル待ち受付中' : s.full ? '満員' : left <= 4 ? 'あと' + left + '名' : '受付中'));
       li.appendChild(top);
 
       li.appendChild(el('div', 'when', s.time));
@@ -214,23 +229,53 @@
         li.appendChild(names);
       }
 
+      if (waits.length) {
+        var wb = el('div', 'waitbox');
+        wb.appendChild(el('div', 'wl', 'キャンセル待ち ' + waits.length + '名' + (s.waitOpen === false ? '(前日22時で自動繰り上げは終了しました)' : '(番号順に繰り上がります)')));
+        var wn = el('div', 'names');
+        wn.style.marginTop = '0';
+        waits.forEach(function(n, i){
+          var c = el('span', 'chip wait' + (i === myWait ? ' me' : ''));
+          c.appendChild(el('em', null, String(i + 1)));
+          c.appendChild(document.createTextNode(n));
+          wn.appendChild(c);
+        });
+        wb.appendChild(wn);
+        li.appendChild(wb);
+      }
+
+      if (promoted) li.appendChild(el('div', 'promo', '🎉 キャンセル待ちから繰り上がり、参加が確定しました。'));
+
       var act = el('div', 'act');
-      if (mine) {
-        act.appendChild(el('span', 'you', '✓ 参加登録済みです'));
-        var bc = el('button', 'cancel', 'キャンセルする');
+      if (mine || myWait >= 0) {
+        act.appendChild(mine ? el('span', 'you', '✓ 参加登録済みです')
+                             : el('span', 'you w', '⏳ キャンセル待ち ' + (myWait + 1) + '番目です'));
+        if (!mine && !s.full && s.open && s.waitOpen === false) {   // 締切後に空きが出たとき
+          var bj2 = el('button', 'join', '空きが出ました・参加する');
+          bj2.type = 'button';
+          bj2.addEventListener('click', function(){ send('join', s.date); });
+          act.appendChild(bj2);
+        }
+        var label = mine ? 'キャンセルする' : 'キャンセル待ちをやめる';
+        var bc = el('button', 'cancel', label);
         bc.type = 'button';
         bc.addEventListener('click', function(){
           if (!bc.classList.contains('sure')) {       // 押し間違い防止: 2回押して確定
             bc.classList.add('sure');
             bc.textContent = 'もう一度押すと取消';
-            setTimeout(function(){ bc.classList.remove('sure'); bc.textContent = 'キャンセルする'; }, 5000);
+            setTimeout(function(){ bc.classList.remove('sure'); bc.textContent = label; }, 5000);
             return;
           }
           send('cancel', s.date);
         });
         act.appendChild(bc);
+      } else if (canWait) {
+        var bw = el('button', 'waitjoin', 'キャンセル待ちに登録する');
+        bw.type = 'button';
+        bw.addEventListener('click', function(){ send('wait', s.date); });
+        act.appendChild(bw);
       } else {
-        var bj = el('button', 'join', s.full ? '満員です' : !s.open ? '受付を終了しました' : '参加する');
+        var bj = el('button', 'join', !s.open ? '受付を終了しました' : s.full ? '満員です' : '参加する');
         bj.type = 'button';
         bj.disabled = closed;
         bj.addEventListener('click', function(){ send('join', s.date); });
@@ -273,7 +318,7 @@
     if (busy) return;
     var name = elName.value.trim(), pin = elPin.value.trim().normalize('NFKC');
     var real = elReal.value.trim();
-    var badReal = action === 'join' && !real, badName = !name, badPin = !/^\d{4}$/.test(pin);
+    var badReal = action !== 'cancel' && !real, badName = !name, badPin = !/^\d{4}$/.test(pin);
     elReal.classList.toggle('bad', badReal);
     elName.classList.toggle('bad', badName);
     elPin.classList.toggle('bad', badPin);
@@ -284,11 +329,11 @@
     }
     remember();
     setBusy(true);
-    say(action === 'join' ? '登録しています…' : 'キャンセルしています…', true);
+    say(action === 'join' ? '登録しています…' : action === 'wait' ? 'キャンセル待ちに登録しています…' : 'キャンセルしています…', true);
     fetch(GAS_URL, {
       method: 'POST',
       headers: {'Content-Type': 'text/plain;charset=utf-8'},   // text/plain にすることで事前確認(CORS)を回避
-      body: JSON.stringify(action === 'join' ? {action: action, date: date, name: name, pin: pin, real: real} : {action: action, date: date, name: name, pin: pin})
+      body: JSON.stringify(action !== 'cancel' ? {action: action, date: date, name: name, pin: pin, real: real} : {action: action, date: date, name: name, pin: pin})
     })
       .then(function(r){ return r.json(); })
       .then(function(j){
