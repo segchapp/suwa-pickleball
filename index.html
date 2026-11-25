@@ -194,6 +194,11 @@
   .reserve-btn:hover{background:#fff;transform:translateY(-2px)}
   .sched-place .stat{display:block;font-size:.84rem;color:rgba(246,242,231,.7)}
   .sched-place .stat.stop{color:#ff6b6b;font-weight:700}
+  .sched-place .stat.wait{color:#ffd24a;font-weight:700}
+  .notice-new{margin-top:14px;padding:14px 16px;border:1px solid rgba(255,210,74,.55);border-radius:12px;background:rgba(255,210,74,.08)}
+  .notice-new .notice-body{margin-top:6px}
+  .notice-new-title{font-weight:900;color:#ffe9a8;font-size:1.02rem;line-height:1.6}
+  .new-badge{display:inline-block;margin-right:8px;padding:1px 8px;border-radius:6px;background:#ffd24a;color:#3a2a00;font-size:.78rem;font-weight:900;letter-spacing:.06em;vertical-align:2px}
   .sched-date{flex-wrap:wrap}
   .sched-date .dnote{flex-basis:100%;font-size:.76rem;line-height:1.35;color:rgba(246,242,231,.72);margin-top:4px}
   .sched-msg{padding:18px 0;color:rgba(246,242,231,.75);font-size:.95rem}
@@ -411,11 +416,16 @@
         <span class="tag en">Notice</span>
         <h3>おしらせ</h3>
       </div>
+      <div class="notice-new">
+        <p class="notice-new-title"><span class="new-badge en">NEW</span>キャンセル待ち登録ができるようになりました（11/25〜）</p>
+        <p class="notice-body">定員（24名）に達した練習日も、出欠ページから<strong style="color:#ffd24a;font-weight:800">キャンセル待ち</strong>に登録できます。キャンセルが出た場合は、登録順に自動で繰り上がって参加確定となります（キャンセル待ちの登録と自動繰り上げは練習日の前日22時まで）。<br>
+          繰り上がりのお知らせは届かないため、練習日が近づいたら出欠ページでご確認ください。</p>
+      </div>
       <p class="notice-body">いつも諏訪ピックルボールクラブの練習にご参加いただき、ありがとうございます。<br>おかげさまで参加してくださる方が増えてきたため、<strong style="color:var(--lime-bright);font-weight:800">このたびホームページから練習の出欠登録ができるようになりました。</strong></p>
       <p class="notice-body">上の「出欠登録・キャンセル」ボタンから、お名前とニックネームを入力して参加したい日を選ぶだけで登録できます。<br>
         ご都合が悪くなったときのキャンセルも、同じページからご自身で行えます。何日分でもまとめてご登録いただけます。</p>
       <p class="notice-body">なお、コートに入れない待ち時間が長くなると体が冷え、ケガにもつながるため、<strong style="color:#f26b6b;font-weight:800">各練習日の定員は24名（先着順）</strong>とさせていただいています。<br>
-        定員に達した日は自動で受付終了となりますので、お早めのご登録をおすすめします。</p>
+        定員に達した日はキャンセル待ちでの受付となりますので、お早めのご登録をおすすめします。</p>
       <p class="notice-body">ラインで申し込み済の練習のキャンセルは、<a href="https://lin.ee/n9YhKXx" target="_blank" rel="noopener" class="line-link">公式ライン</a>でお願いします。</p>
   </div>
 </div></section>
@@ -597,6 +607,7 @@
       <div class="qa"><button><span class="q"><span class="mark en">Q</span>道具は用意が必要ですか?</span><span class="plus"></span></button><div class="a"><p>パドルとボールはクラブで貸し出します。動きやすい服装と、体育館用の室内シューズだけご用意ください。2回目以降の参加の際は、ご自分のパドルをご準備下さい。</p></div></div>
       <div class="qa"><button><span class="q"><span class="mark en">Q</span>一人でも参加できますか?</span><span class="plus"></span></button><div class="a"><p>もちろんです。お一人での参加が大半です。ダブルス中心なので、その場でペアを組んで自然に交流できます。</p></div></div>
       <div class="qa"><button><span class="q"><span class="mark en">Q</span>年齢の制限はありますか?</span><span class="plus"></span></button><div class="a"><p>はい。参加は中学生以上の方に限らせていただいており、小学生以下の方はご参加いただけません。中学生以上であれば、幅広い世代が一緒に楽しんでいます。</p></div></div>
+      <div class="qa"><button><span class="q"><span class="mark en">Q</span>満員の日に参加したいときは?</span><span class="plus"></span></button><div class="a"><p>出欠ページからキャンセル待ちに登録できます。キャンセルが出ると登録順に自動で繰り上がります（練習日の前日22時まで）。繰り上がりのお知らせは届かないため、出欠ページでご確認ください。</p></div></div>
     </div>
   </div>
 </section>
@@ -674,8 +685,10 @@
         li.appendChild(dt);
         li.appendChild(el('div','sched-time',s.time));
         const pl=el('div','sched-place',s.place);
-        const stop=s.full||!s.open;
-        if(stop)pl.appendChild(el('span','stat stop','追加募集停止'));
+        // 出欠ページ（reserve.html）と同じ判定で表示
+        if(!s.open)pl.appendChild(el('span','stat stop','受付終了'));
+        else if(s.full&&s.waitOpen!==false)pl.appendChild(el('span','stat wait','満員｜キャンセル待ち受付中'));
+        else if(s.full)pl.appendChild(el('span','stat stop','満員'));
         li.appendChild(pl);
         list.appendChild(li);
       });
